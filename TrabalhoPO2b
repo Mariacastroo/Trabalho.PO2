@@ -1,5 +1,5 @@
 
-// Produto.java
+/*Loja de Eletrenicos*/
 public class Produto {
     private String marca;
     private String modelo;
@@ -13,7 +13,7 @@ public class Produto {
         this.tipoTela = tipoTela;
     }
 
-    // Getters and Setters
+    
     public String getMarca() { return marca; }
     public void setMarca(String marca) { this.marca = marca; }
     public String getModelo() { return modelo; }
@@ -23,13 +23,13 @@ public class Produto {
     public String getTipoTela() { return tipoTela; }
     public void setTipoTela(String tipoTela) { this.tipoTela = tipoTela; }
 
-    @Override
+    
     public String toString() {
         return String.format("Produto [marca=%s, modelo=%s, preco=%.2f, tipoTela=%s]", marca, modelo, preco, tipoTela);
     }
 }
 
-// Televisao.java
+
 public class Televisao extends Produto {
     private double tamanhoTela;
 
@@ -41,13 +41,13 @@ public class Televisao extends Produto {
     public double getTamanhoTela() { return tamanhoTela; }
     public void setTamanhoTela(double tamanhoTela) { this.tamanhoTela = tamanhoTela; }
 
-    @Override
+
     public String toString() {
         return String.format("Televisao [tamanhoTela=%.1f, %s]", tamanhoTela, super.toString());
     }
 }
 
-// Smartphone.java
+
 public class Smartphone extends Produto {
     private int memoriaRAM;
     private int armazenamentoInterno;
@@ -63,13 +63,12 @@ public class Smartphone extends Produto {
     public int getArmazenamentoInterno() { return armazenamentoInterno; }
     public void setArmazenamentoInterno(int armazenamentoInterno) { this.armazenamentoInterno = armazenamentoInterno; }
 
-    @Override
+    
     public String toString() {
         return String.format("Smartphone [memoriaRAM=%d, armazenamentoInterno=%d, %s]", memoriaRAM, armazenamentoInterno, super.toString());
     }
 }
 
-// Notebook.java
 public class Notebook extends Produto {
     private String processador;
     private String sistemaOperacional;
@@ -85,18 +84,17 @@ public class Notebook extends Produto {
     public String getSistemaOperacional() { return sistemaOperacional; }
     public void setSistemaOperacional(String sistemaOperacional) { this.sistemaOperacional = sistemaOperacional; }
 
-    @Override
+
     public String toString() {
         return String.format("Notebook [processador=%s, sistemaOperacional=%s, %s]", processador, sistemaOperacional, super.toString());
     }
 }
 
-// Descontavel.java
 public interface Descontavel {
     void aplicarDesconto(Produto produto);
 }
 
-// PromocaoDescontoPorcentagem.java
+
 public class PromocaoDescontoPorcentagem implements Descontavel {
     private double porcentagemDesconto;
 
@@ -104,14 +102,13 @@ public class PromocaoDescontoPorcentagem implements Descontavel {
         this.porcentagemDesconto = porcentagemDesconto;
     }
 
-    @Override
+ 
     public void aplicarDesconto(Produto produto) {
         double novoPreco = produto.getPreco() * (1 - porcentagemDesconto / 100);
         produto.setPreco(novoPreco);
     }
 }
 
-// PromocaoDescontoFixo.java
 public class PromocaoDescontoFixo implements Descontavel {
     private double valorDesconto;
 
@@ -119,14 +116,13 @@ public class PromocaoDescontoFixo implements Descontavel {
         this.valorDesconto = valorDesconto;
     }
 
-    @Override
+    
     public void aplicarDesconto(Produto produto) {
         double novoPreco = produto.getPreco() - valorDesconto;
         produto.setPreco(Math.max(novoPreco, 0)); // Preço não pode ser negativo
     }
 }
 
-// Loja.java
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,19 +155,14 @@ public class Loja {
     public void aplicarPromocoes() {
         produtos.forEach(produto -> promocoes.forEach(promocao -> promocao.aplicarDesconto(produto)));
     }
-}
 
-// LojaApp.java
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class LojaApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Loja loja = new Loja();
 
-        // Adicionando produtos para testes
+        
         loja.cadastrarProduto(new Televisao("Samsung", "QLED", 5000.0, "LED", 55));
         loja.cadastrarProduto(new Smartphone("Apple", "iPhone 13", 7000.0, "OLED", 8, 128));
         loja.cadastrarProduto(new Notebook("Dell", "Inspiron", 4000.0, "LCD", "Intel i5", "Windows 10"));
@@ -184,7 +175,7 @@ public class LojaApp {
             System.out.println("5. Sair");
             System.out.print("Escolha uma opção: ");
             int opcao = scanner.nextInt();
-            scanner.nextLine(); // Consumir a nova linha
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1:
