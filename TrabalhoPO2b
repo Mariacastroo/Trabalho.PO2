@@ -1,0 +1,223 @@
+
+// Produto.java
+public class Produto {
+    private String marca;
+    private String modelo;
+    private double preco;
+    private String tipoTela;
+
+    public Produto(String marca, String modelo, double preco, String tipoTela) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.preco = preco;
+        this.tipoTela = tipoTela;
+    }
+
+    // Getters and Setters
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
+    public String getModelo() { return modelo; }
+    public void setModelo(String modelo) { this.modelo = modelo; }
+    public double getPreco() { return preco; }
+    public void setPreco(double preco) { this.preco = preco; }
+    public String getTipoTela() { return tipoTela; }
+    public void setTipoTela(String tipoTela) { this.tipoTela = tipoTela; }
+
+    @Override
+    public String toString() {
+        return String.format("Produto [marca=%s, modelo=%s, preco=%.2f, tipoTela=%s]", marca, modelo, preco, tipoTela);
+    }
+}
+
+// Televisao.java
+public class Televisao extends Produto {
+    private double tamanhoTela;
+
+    public Televisao(String marca, String modelo, double preco, String tipoTela, double tamanhoTela) {
+        super(marca, modelo, preco, tipoTela);
+        this.tamanhoTela = tamanhoTela;
+    }
+
+    public double getTamanhoTela() { return tamanhoTela; }
+    public void setTamanhoTela(double tamanhoTela) { this.tamanhoTela = tamanhoTela; }
+
+    @Override
+    public String toString() {
+        return String.format("Televisao [tamanhoTela=%.1f, %s]", tamanhoTela, super.toString());
+    }
+}
+
+// Smartphone.java
+public class Smartphone extends Produto {
+    private int memoriaRAM;
+    private int armazenamentoInterno;
+
+    public Smartphone(String marca, String modelo, double preco, String tipoTela, int memoriaRAM, int armazenamentoInterno) {
+        super(marca, modelo, preco, tipoTela);
+        this.memoriaRAM = memoriaRAM;
+        this.armazenamentoInterno = armazenamentoInterno;
+    }
+
+    public int getMemoriaRAM() { return memoriaRAM; }
+    public void setMemoriaRAM(int memoriaRAM) { this.memoriaRAM = memoriaRAM; }
+    public int getArmazenamentoInterno() { return armazenamentoInterno; }
+    public void setArmazenamentoInterno(int armazenamentoInterno) { this.armazenamentoInterno = armazenamentoInterno; }
+
+    @Override
+    public String toString() {
+        return String.format("Smartphone [memoriaRAM=%d, armazenamentoInterno=%d, %s]", memoriaRAM, armazenamentoInterno, super.toString());
+    }
+}
+
+// Notebook.java
+public class Notebook extends Produto {
+    private String processador;
+    private String sistemaOperacional;
+
+    public Notebook(String marca, String modelo, double preco, String tipoTela, String processador, String sistemaOperacional) {
+        super(marca, modelo, preco, tipoTela);
+        this.processador = processador;
+        this.sistemaOperacional = sistemaOperacional;
+    }
+
+    public String getProcessador() { return processador; }
+    public void setProcessador(String processador) { this.processador = processador; }
+    public String getSistemaOperacional() { return sistemaOperacional; }
+    public void setSistemaOperacional(String sistemaOperacional) { this.sistemaOperacional = sistemaOperacional; }
+
+    @Override
+    public String toString() {
+        return String.format("Notebook [processador=%s, sistemaOperacional=%s, %s]", processador, sistemaOperacional, super.toString());
+    }
+}
+
+// Descontavel.java
+public interface Descontavel {
+    void aplicarDesconto(Produto produto);
+}
+
+// PromocaoDescontoPorcentagem.java
+public class PromocaoDescontoPorcentagem implements Descontavel {
+    private double porcentagemDesconto;
+
+    public PromocaoDescontoPorcentagem(double porcentagemDesconto) {
+        this.porcentagemDesconto = porcentagemDesconto;
+    }
+
+    @Override
+    public void aplicarDesconto(Produto produto) {
+        double novoPreco = produto.getPreco() * (1 - porcentagemDesconto / 100);
+        produto.setPreco(novoPreco);
+    }
+}
+
+// PromocaoDescontoFixo.java
+public class PromocaoDescontoFixo implements Descontavel {
+    private double valorDesconto;
+
+    public PromocaoDescontoFixo(double valorDesconto) {
+        this.valorDesconto = valorDesconto;
+    }
+
+    @Override
+    public void aplicarDesconto(Produto produto) {
+        double novoPreco = produto.getPreco() - valorDesconto;
+        produto.setPreco(Math.max(novoPreco, 0)); // Preço não pode ser negativo
+    }
+}
+
+// Loja.java
+import java.util.ArrayList;
+import java.util.List;
+
+public class Loja {
+    private List<Produto> produtos = new ArrayList<>();
+    private List<Descontavel> promocoes = new ArrayList<>();
+
+    public void cadastrarProduto(Produto produto) {
+        produtos.add(produto);
+    }
+
+    public void listarProdutos() {
+        produtos.forEach(System.out::println);
+    }
+
+    public void buscarProduto(String termo) {
+        produtos.stream()
+                .filter(p -> p.getMarca().equalsIgnoreCase(termo) || p.getModelo().equalsIgnoreCase(termo) || p.getTipoTela().equalsIgnoreCase(termo))
+                .forEach(System.out::println);
+    }
+
+    public void adicionarPromocao(Descontavel promocao) {
+        promocoes.add(promocao);
+    }
+
+    public double calcularTotalCompra(List<Produto> produtosSelecionados) {
+        return produtosSelecionados.stream().mapToDouble(Produto::getPreco).sum();
+    }
+
+    public void aplicarPromocoes() {
+        produtos.forEach(produto -> promocoes.forEach(promocao -> promocao.aplicarDesconto(produto)));
+    }
+}
+
+// LojaApp.java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class LojaApp {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Loja loja = new Loja();
+
+        // Adicionando produtos para testes
+        loja.cadastrarProduto(new Televisao("Samsung", "QLED", 5000.0, "LED", 55));
+        loja.cadastrarProduto(new Smartphone("Apple", "iPhone 13", 7000.0, "OLED", 8, 128));
+        loja.cadastrarProduto(new Notebook("Dell", "Inspiron", 4000.0, "LCD", "Intel i5", "Windows 10"));
+
+        while (true) {
+            System.out.println("1. Listar produtos");
+            System.out.println("2. Buscar produto");
+            System.out.println("3. Adicionar promoção");
+            System.out.println("4. Calcular total da compra");
+            System.out.println("5. Sair");
+            System.out.print("Escolha uma opção: ");
+            int opcao = scanner.nextInt();
+            scanner.nextLine(); // Consumir a nova linha
+
+            switch (opcao) {
+                case 1:
+                    loja.listarProdutos();
+                    break;
+                case 2:
+                    System.out.print("Digite a marca, modelo ou tipo de tela: ");
+                    String termo = scanner.nextLine();
+                    loja.buscarProduto(termo);
+                    break;
+                case 3:
+                    System.out.print("Digite o tipo de promoção (1 para porcentagem, 2 para valor fixo): ");
+                    int tipoPromocao = scanner.nextInt();
+                    System.out.print("Digite o valor do desconto: ");
+                    double valorDesconto = scanner.nextDouble();
+                    Descontavel promocao = (tipoPromocao == 1) ?
+                            new PromocaoDescontoPorcentagem(valorDesconto) :
+                            new PromocaoDescontoFixo(valorDesconto);
+                    loja.adicionarPromocao(promocao);
+                    loja.aplicarPromocoes();
+                    break;
+                case 4:
+                    List<Produto> produtosSelecionados = new ArrayList<>();
+                    // Adicionar lógica para selecionar produtos
+                    double total = loja.calcularTotalCompra(produtosSelecionados);
+                    System.out.println("Total da compra: " + total);
+                    break;
+                case 5:
+                    scanner.close();
+                    System.exit(0);
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+        }
+    }
+}
