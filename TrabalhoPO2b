@@ -123,8 +123,7 @@ public class PromocaoDescontoFixo implements Descontavel {
     }
 }
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class Loja {
     private List<Produto> produtos = new ArrayList<>();
